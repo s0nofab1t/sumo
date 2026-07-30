@@ -158,7 +158,7 @@ computeRoutes(RONet& net, ROLoader& loader, OptionsCont& oc) {
         } else if (routingAlgorithm == "arcflag") {
             auto ttFunction = gWeightsRandomFactor > 1 ? &ROEdge::getTravelTimeStaticRandomized : &ROEdge::getTravelTimeStatic;
             auto reversedTtFunction = gWeightsRandomFactor > 1 ? &FlippedEdge<ROEdge, RONode, ROVehicle>::getTravelTimeStaticRandomized : &FlippedEdge<ROEdge, RONode, ROVehicle>::getTravelTimeStatic;
-            router = new AFRouter<ROEdge, RONode, ROVehicle>(ROEdge::getAllEdges(),
+            router = new AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>(ROEdge::getAllEdges(),
                     oc.getBool("ignore-errors"), ttFunction, reversedTtFunction, (oc.isSet("weight-files") ? string2time(oc.getString("weight-period")) : SUMOTime_MAX),
                     nullptr, nullptr, net.hasPermissions(), oc.isSet("restriction-params"));
         } else {

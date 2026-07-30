@@ -60,11 +60,11 @@ public:
      * @param[in] haveRestrictions The boolean flag indicating whether edge restrictions need to be considered or not
      */
     void test(const ROVehicle* const vehicle, bool unbuildIsWarning, typename SUMOAbstractRouter<ROEdge, ROVehicle>::Operation operation,
-              typename SUMOAbstractRouter<FlippedEdge<ROEdge, RONode, ROVehicle>, ROVehicle>::Operation flippedOperation,
-              SUMOTime weightPeriod,
-              const std::shared_ptr<const LookupTable> lookup = nullptr,
-              const std::shared_ptr<const FlippedLookupTable> flippedLookup = nullptr,
-              const bool havePermissions = false, const bool haveRestrictions = false);
+        typename SUMOAbstractRouter<FlippedEdge<ROEdge, RONode, ROVehicle>, ROVehicle>::Operation flippedOperation,
+        SUMOTime weightPeriod,
+        const std::shared_ptr<const LookupTable> lookup = nullptr,
+        const std::shared_ptr<const FlippedLookupTable> flippedLookup = nullptr,
+        const bool havePermissions = false, const bool haveRestrictions = false);
 
 private:
     /** @brief Tests routes from edges inside the first cell to such of the second cell
@@ -76,9 +76,9 @@ private:
      * @param[in] aStar The A* (A Star) router
      */
     void testRoutes(const Cell* cell1, const Cell* cell2, const ROVehicle* const vehicle,
-                    AFRouter<ROEdge, RONode, ROVehicle>* arcFlagRouter,
-                    CHRouter<ROEdge, ROVehicle>* cHRouter,
-                    AStarRouter<ROEdge, ROVehicle>* aStar);
+        AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>* arcFlagRouter,
+        CHRouter<ROEdge, ROVehicle>* cHRouter,
+        AStarRouter<ROEdge, ROVehicle, ROMapMatcher>* aStar);
 
     /** @brief Tests a single route from the first edge to the second one
      * @param[in] edge1 The first edge
@@ -88,6 +88,6 @@ private:
      * @param[in] aStar The A* (A Star) router
      */
     void testQuery(const ROEdge* edge1, const ROEdge* edge2, const ROVehicle* const vehicle,
-                   AFRouter<ROEdge, RONode, ROVehicle>* arcFlagRouter,
-                   AStarRouter<ROEdge, ROVehicle>* aStar);
+        AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>* arcFlagRouter,
+        AStarRouter<ROEdge, ROVehicle, ROMapMatcher>* aStar);
 };

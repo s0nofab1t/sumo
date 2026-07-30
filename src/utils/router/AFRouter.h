@@ -175,9 +175,9 @@ public:
         myLastSettledEdgeCell(nullptr),
         myTargetEdgeCellLevel0(nullptr) {
         myPartition = new KDTreePartition<E, N, V>(AFRO_MAX_NUMBER_OF_PARTITION_LEVELS, edges, this->myHavePermissions,
-                this->myHaveRestrictions);
-        myBuilder = new AFBuilder<E, N, V>(AFRO_MAX_NUMBER_OF_PARTITION_LEVELS, edges, unbuildIsWarning,
-                                           flippedOperation, flippedLookup, this->myHavePermissions, this->myHaveRestrictions);
+            this->myHaveRestrictions);
+        myBuilder = new AFBuilder<E, N, V, M>(AFRO_MAX_NUMBER_OF_PARTITION_LEVELS, edges, unbuildIsWarning,
+            flippedOperation, flippedLookup, this->myHavePermissions, this->myHaveRestrictions);
         for (const E* const edge : edges) {
             this->myEdgeInfos.push_back(typename SUMOAbstractRouter<E, V>::EdgeInfo(edge));
             myMaxSpeed = MAX2(myMaxSpeed, edge->getSpeedLimit() * MAX2(1.0, edge->getLengthGeometryFactor()));
@@ -224,9 +224,9 @@ public:
         myLastSettledEdgeCell(nullptr),
         myTargetEdgeCellLevel0(nullptr) {
         myPartition = new KDTreePartition<E, N, V>(AFRO_MAX_NUMBER_OF_PARTITION_LEVELS, edges, this->myHavePermissions,
-                this->myHaveRestrictions);
-        myBuilder = new AFBuilder<E, N, V>(AFRO_MAX_NUMBER_OF_PARTITION_LEVELS, edges, unbuildIsWarning,
-                                           flippedOperation, flippedLookup, this->myHavePermissions, this->myHaveRestrictions);
+            this->myHaveRestrictions);
+        myBuilder = new AFBuilder<E, N, V, M>(AFRO_MAX_NUMBER_OF_PARTITION_LEVELS, edges, unbuildIsWarning,
+            flippedOperation, flippedLookup, this->myHavePermissions, this->myHaveRestrictions);
         for (const auto& edgeInfo : edgeInfos) {
             this->myEdgeInfos.push_back(typename SUMOAbstractRouter<E, V>::EdgeInfo(edgeInfo.edge));
             myMaxSpeed = MAX2(myMaxSpeed, edgeInfo.edge->getSpeedLimit() * edgeInfo.edge->getLengthGeometryFactor());

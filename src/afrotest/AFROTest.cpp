@@ -54,13 +54,13 @@ AFROTest::test(const ROVehicle* const vehicle, bool unbuildIsWarning, typename S
     kDPartitionBuildTime = (SysUtils::getCurrentMillis() - kDPartitionBuildStart);
     std::cout << "Time spent for k-d partition build: " << elapsedMs2string(kDPartitionBuildTime) << std::endl;
     std::cout << "Forward k-d tree partition ready." << std::endl;
-    AFRouter<ROEdge, RONode, ROVehicle>* arcFlagRouter = new AFRouter<ROEdge, RONode, ROVehicle>(edges,
+    AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>* arcFlagRouter = new AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>(edges,
             unbuildIsWarning, operation, flippedOperation, weightPeriod, lookup, flippedLookup, havePermissions,
             haveRestrictions);
     std::cout << "AFRouter instantiated." << std::endl;
     CHRouter<ROEdge, ROVehicle>* cHRouter = new CHRouter<ROEdge, ROVehicle>(
         edges, unbuildIsWarning, operation, /*SVC_IGNORING*/vehicle->getVClass(), weightPeriod, havePermissions, haveRestrictions);
-    AStarRouter<ROEdge, ROVehicle>* aStar = new AStarRouter<ROEdge, ROVehicle>(edges, unbuildIsWarning, operation, lookup,
+    AStarRouter<ROEdge, ROVehicle, ROMapMatcher>* aStar = new AStarRouter<ROEdge, ROVehicle, ROMapMatcher>(edges, unbuildIsWarning, operation, lookup,
             havePermissions, haveRestrictions);
     actualNumberOfLevels = partition->getNumberOfLevels();
     std::cout << "Actual number of levels after partitioning: " << actualNumberOfLevels << std::endl;
@@ -177,13 +177,12 @@ AFROTest::test(const ROVehicle* const vehicle, bool unbuildIsWarning, typename S
 
 void
 AFROTest::testRoutes(const Cell* cell1, const Cell* cell2, const ROVehicle* const vehicle,
-                     AFRouter<ROEdge, RONode, ROVehicle>* arcFlagRouter,
+                     AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>* arcFlagRouter,
                      CHRouter<ROEdge, ROVehicle>* cHRouter,
-                     AStarRouter<ROEdge, ROVehicle>* aStar) {
+                     AStarRouter<ROEdge, ROVehicle, ROMapMatcher>* aStar) {
     std::unordered_set<const ROEdge*>* cell1InsideEdges = cell1->edgeSet(vehicle);
     for (auto iter = cell1InsideEdges->begin(); iter != cell1InsideEdges->end();) {
-        if ((arcFlagRouter->edgeInfo(*iter))->prohibited
-                || arcFlagRouter->isProhibited(*iter, vehicle)) {
+        if (arcFlagRouter->isProhibited(*iter, vehicle, std::numeric_limits<double>::max())) {
             iter = cell1InsideEdges->erase(iter);
         } else {
             ++iter;
@@ -196,8 +195,7 @@ AFROTest::testRoutes(const Cell* cell1, const Cell* cell2, const ROVehicle* cons
     delete cell1InsideEdges;
     std::unordered_set<const ROEdge*>* cell2InsideEdges = cell2->edgeSet(vehicle);
     for (auto iter2 = cell2InsideEdges->begin(); iter2 != cell2InsideEdges->end();) {
-        if ((arcFlagRouter->edgeInfo(*iter2))->prohibited
-                || arcFlagRouter->isProhibited(*iter2, vehicle)) {
+        if (arcFlagRouter->isProhibited(*iter2, vehicle, std::numeric_limits<double>::max())) {
             iter2 = cell2InsideEdges->erase(iter2);
         } else {
             ++iter2;
@@ -347,8 +345,8 @@ AFROTest::testRoutes(const Cell* cell1, const Cell* cell2, const ROVehicle* cons
 
 void
 AFROTest::testQuery(const ROEdge* edge1, const ROEdge* edge2, const ROVehicle* const vehicle,
-                    AFRouter<ROEdge, RONode, ROVehicle>* arcFlagRouter,
-                    AStarRouter<ROEdge, ROVehicle>* aStar) {
+                    AFRouter<ROEdge, RONode, ROVehicle, ROMapMatcher>* arcFlagRouter,
+                    AStarRouter<ROEdge, ROVehicle, ROMapMatcher>* aStar) {
     assert(edge1 && edge2);
     assert(edge1 != edge2);
     std::cout << "Testcase, edge1: " << edge1->getID() << ", edge2 : " << edge2->getID() << std::endl;
